@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import ProductItem from '../components/Products/ProductItem';
-import ProductsContext from '../context/products';
+import { PRODUCTS_STORE_KEY } from '../hooks-store/products-store';
+import useCustomStore from '../hooks-store/store';
 import './Products.css';
 
 const Products = (props) => {
-  const productList = useContext(ProductsContext).products;
+  const customStoreState = useCustomStore()[0]; // 14. read global store state
+  const productList = customStoreState[PRODUCTS_STORE_KEY]; // 15. keyname for global state "slice"
 
   return (
     <ul className='products-list'>

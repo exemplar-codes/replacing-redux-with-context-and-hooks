@@ -1,19 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import Card from '../UI/Card';
 import './ProductItem.css';
-import ProductsContext from '../../context/products';
+import useCustomStore from '../../hooks-store/store';
+import { TOGGLE_FAV } from '../../hooks-store/products-store';
 
-const ProductItem = props => {
-  const toggleFavorite = useContext(ProductsContext).toggleFavorite;
+const ProductItem = (props) => {
+  // 16. add nothing to global state slice, but add a listener, and get dispatch.
+  const customStoreDispatch = useCustomStore()[1];
 
   const toggleFavHandler = () => {
-    toggleFavorite(props.id);
+    customStoreDispatch(TOGGLE_FAV, props.id); // 17. dispatch action
   };
 
   return (
     <Card style={{ marginBottom: '1rem' }}>
-      <div className="product-item">
+      <div className='product-item'>
         <h2 className={props.isFav ? 'is-fav' : ''}>{props.title}</h2>
         <p>{props.description}</p>
         <button

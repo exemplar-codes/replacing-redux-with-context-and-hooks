@@ -6,7 +6,7 @@ let listeners = []; // places where we can listen to changes in the global state
 let actions = {}; // to mutate the store
 
 // simple scoped variables. Not exported.
-const useCustomStore = () => {
+const useCustomStore = (shouldListen = true) => {
   const setCustomStoreState = useState(globalState)[1];
   // 1. using useState because it allows us to trigger a re-render
   // 2. also, when a custom hook re-renders, the component using the hook also re-render
@@ -19,15 +19,17 @@ const useCustomStore = () => {
   // 6. We'll add more setter functions for each component that uses the hook. We'll remove the function when the component un-mounts.
   //    To do this addition and removal "removal", we'll use useEffect.
   useEffect(() => {
-    listeners.push(setCustomStoreState);
-
+    if (shouldListen) {
+      listeners.push(setCustomStoreState);
+    }
     return () => {
-      listeners = listeners.filter((li) => li !== setCustomStoreState);
-      // FIXME: can you compare functions in general? maybe React.useState setters are comparable.
-
-      // BTW, the cleanup function runs at a later time, so the setter is stored (in a closure)
+      if (shouldListen)
+        listeners = listeners.filter((li) => li !== setCustomStoreState);
     };
-  }, []);
+    // FIXME: can you compare functions in general? maybe React.useState setters are comparable.
+
+    // BTW, the cleanup function runs at a later time, so the setter is stored (in a closure)
+  }, [shouldListen]);
   // 7. yes, this is only when the hook is encountered for the first time.
   // Both useState and this will be ignored for all subsequent re-renders of the component as well re-render due to store state change
 

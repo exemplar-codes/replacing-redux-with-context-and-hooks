@@ -5,9 +5,10 @@ import './ProductItem.css';
 import useCustomStore from '../../hooks-store/store';
 import { TOGGLE_FAV } from '../../hooks-store/products-store';
 
-const ProductItem = (props) => {
+const ProductItem = React.memo((props) => {
+  console.log("Re-render");
   // 16. add nothing to global state slice, but add a listener, and get dispatch.
-  const customStoreDispatch = useCustomStore()[1];
+  const customStoreDispatch = useCustomStore(false)[1];
 
   const toggleFavHandler = () => {
     customStoreDispatch(TOGGLE_FAV, props.id); // 17. dispatch action
@@ -27,6 +28,6 @@ const ProductItem = (props) => {
       </div>
     </Card>
   );
-};
+});
 
 export default ProductItem;
